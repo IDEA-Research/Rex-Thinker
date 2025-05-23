@@ -1,0 +1,5 @@
+{"image_name": "COCO_train2014_000000519404.jpg", "image_id": 519404, "ans": [0.0, 45.95, 238.92, 454.59], "category": "person", "referring": "two woman one in black eatting and the other has a white shirt at the desk"}
+{"image_name": "COCO_train2014_000000519404.jpg", "image_id": 519404, "ans": [0.0, 45.95, 238.92, 454.59], "category": "person", "referring": "woman in white shirt looking down at laptop computer"}
+{"image_name": "COCO_train2014_000000181828.jpg", "image_id": 181828, "ans": [213.72, 456.51, 405.73, 590.26], "category": "person","referring": "a tv with a woman being interviewed on it"}
+{"image_name": "COCO_train2014_000000181828.jpg", "image_id": 181828, "ans": [213.72, 456.51, 405.73, 590.26],"category": "person","referring": "a woman with sunglasses on her head on the television being interviewed"}
+{"image_name": "COCO_train2014_000000038850.jpg", "image_id": 38850, "ans": [93.82, 45.79, 442.27, 275.54],"category": "person", "referring": "a young boy doing a skateboard trick on a blue board"}
