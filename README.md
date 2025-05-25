@@ -154,3 +154,63 @@ Then you can open your browser and visit `http://localhost:7860` to see the Grad
 
 <p align="center"><img src="assets/gradio.jpg" width="95%"></p>
 
+
+## 4. GRPO Post Training ⚙️
+With the weights of our Rex-Thinker model as a starting point—a model equipped with Chain-of-Thought (CoT) reasoning for referring tasks—you can also fine-tune it to your own domain using the GRPO algorithm. We provide an example code to show you how to fine-tune it on RefCOCOg dataset.
+
+
+### 4.1 Prepare dataset for GRPO training
+- Step1: Download our pre-processed RefCOCOg dataset at [Hugging Face](Mountchicken/RefCOCOg-RexThinker-20k). This dataset if splited from the training set of RefCOCOg, with 20k samples.
+- We also provide a detailed [README](rexthinker/tools/dataset_tools/README.md) to show you how to prepare your own customized dataset for GRPO training.
+
+### 4.2 Start Training
+We use [EasyR1](https://github.com/hiyouga/EasyR1) for GRPO training, thanks for their great work. You can run the following command to start training:
+
+```bash
+bash rexthinker/scripts/grpo_tune_refcocog.sh
+```
+
+Parameter explanation:
+- `config`: The config file for GRPO training. You can find the config files in `rexthinker/scripts/config.yaml`.
+- `data.train_files`: The path to the training dataset.
+- `worker.actor.model.model_path`: The path to the pre-trained model weights of Rex-Thinker-GRPO
+- `worker.actor.global_batch_size, data.rollout_batch_size=64, micro_batch_size_per_device_for_update, micro_batch_size_per_device_for_experience`: See [Here](https://github.com/hiyouga/EasyR1?tab=readme-ov-file#how-to-understand-grpo-in-easyr1) for explanation.
+
+#### Training Logs
+Here is the training logs of fine-tuning Rex-Thinker on RefCOCOg dataset through GRPO.
+<p align="center"><img src="assets/training_log1.jpg" width="95%"></p>
+
+<p align="center"><img src="assets/training_log2.jpg" width="95%"></p>
+
+
+## 5. Evaluation on HumanRef Benchmark 🌋
+We also provide the evaluation code for [HumanRef benchmark](https://github.com/IDEA-Research/RexSeek?tab=readme-ov-file#51-download). You can run the following command to evaluate the model on HumanRef dataset:
+
+```bash
+bash evaluation/submit.sh
+```
+
+To know more about the metric, please refer to this [Doc](https://github.com/IDEA-Research/RexSeek?tab=readme-ov-file#531-metrics)
+
+
+## 6. HumanRef-CoT Dataset 📊
+To support Chain-of-Thought (CoT) reasoning in referring expression comprehension, we introduce HumanRef-CoT, a large-scale dataset with 90,824 high-quality step-by-step reasoning annotations. Built on the HumanRef dataset, which focuses on multi-person referring tasks, HumanRef-CoT provides structured CoT traces—including planning, action, and summarization—generated using GPT-4o. These annotations make the model's reasoning process interpretable and verifiable, and serve as training data for both supervised fine-tuning and GRPO-based instruction tuning.
+
+<p align="center"><img src="assets/data_engine.jpg" width="95%"></p>
+
+We open source a subset of HumanRef-CoT with 45k samples for academic research. You can download the dataset from [Hugging Face](https://huggingface.co/datasets/IDEA-Research/HumanRef-CoT-45K). The dataset is in tsv format. which you can use the following script for visualize
+
+### 6.1 Visualize the dataset
+
+```bash
+python tools/visualize_humanref_cot.py \
+  --img_tsv data/IDEA-Research/HumanRef-CoT-45k/humanref_cot.images.tsv \
+  --ann_tsv data/IDEA-Research/HumanRef-CoT-45k/humanref_cot.annotations.tsv \
+  --ann_lineidx data/IDEA-Research/HumanRef-CoT-45k/humanref_cot.annotations.tsv.lineidx \
+  --num_vis 50 \
+  --output_dir vis/humanref_cot
+```
+
+Note that the current visualization code can't draw emoji ✅, ❌, and ⚠️, which are used in the dataset. 
+
+## Citation 📜

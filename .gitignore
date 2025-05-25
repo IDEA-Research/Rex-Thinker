@@ -166,3 +166,5 @@ data/
 sbatch_logs/
 vis/
 IDEA-Research/
+wandb/
+work_dirs/

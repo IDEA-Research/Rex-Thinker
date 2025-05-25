@@ -5,8 +5,9 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=8
 #SBATCH --cpus-per-task=12
-#SBATCH --mem=400G
+#SBATCH --mem=600G
 #SBATCH --gres=gpu:hgx:8
+#SBATCH -w hgx039
 
 echo "Start time: `date`"   #显示开始时间
 
@@ -36,7 +37,7 @@ set -x
 
 export PYTHONUNBUFFERED=1
 
-MODEL_PATH="/comp_robot/jiangqing/projects/2023/research/R1/QwenSFTOfficial/work_dirs/qwen2.5_7b_finetune_humanref/cot_sft/ablation_3_2e_5_lr_2ep/grpo/checkpoint-2375"  # replace it with your local file path
+MODEL_PATH="IDEA-Research/Rex-Thinker-GRPO-7B"  # replace it with your local file path
 
 python3 -m rexthinker.verl.trainer.main \
     config=rexthinker/scripts/config.yaml \
@@ -51,4 +52,4 @@ python3 -m rexthinker.verl.trainer.main \
     worker.rollout.n=16 \
     trainer.experiment_name=${EXP_NAME} \
     trainer.save_checkpoint_path=${OUTPUT_PATH} \
-    trainer.save_freq=100 \
+    trainer.save_freq=50 \

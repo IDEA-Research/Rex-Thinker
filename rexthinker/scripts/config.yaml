@@ -8,7 +8,7 @@ data:
   max_response_length: 4096
   rollout_batch_size: 32
   val_batch_size: 16
-  format_prompt: ./examples/format_prompt/r1v_format.jinja
+  format_prompt: ./rexthinker/scripts/r1v_format.jinja
   override_chat_template: null
   shuffle: true
   seed: 1
@@ -72,7 +72,7 @@ worker:
 
   reward:
     reward_type: batch
-    reward_function: ./examples/reward_function/human_ref.py:compute_score
+    reward_function: ./rexthinker/scripts/reward_func.py:compute_score
 
 trainer:
   total_epochs: 1

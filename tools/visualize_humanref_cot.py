@@ -28,19 +28,19 @@ def parse_args():
     parser.add_argument(
         "--img_tsv",
         type=str,
-        default="data/humanref_cot.images.tsv",
+        default="IDEA-Research/HumanRef-CoT-45k/humanref_cot.images.tsv",
         help="Path to image TSV file",
     )
     parser.add_argument(
         "--ann_tsv",
         type=str,
-        default="data/humanref_cot.annotations.tsv",
+        default="IDEA-Research/HumanRef-CoT-45k/humanref_cot.annotations.tsv",
         help="Path to annotation TSV file",
     )
     parser.add_argument(
         "--ann_lineidx",
         type=str,
-        default="data/humanref_cot.annotations.tsv.lineidx",
+        default="IDEA-Research/HumanRef-CoT-45k/humanref_cot.annotations.tsv.lineidx",
         help="Path to annotation lineidx file",
     )
     parser.add_argument(
