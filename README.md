@@ -223,4 +223,7 @@ We would like to thank the following projects for their contributions to this wo
 - [EasyR1](https://github.com/hiyouga/EasyR1)
 
 
+## 9. LICENSE
+Rex-Thinker is licensed under the [IDEA License 1.0](LICENSE), Copyright (c) IDEA. All Rights Reserved.
+
 ## Citation 📜

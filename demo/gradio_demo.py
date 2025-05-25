@@ -39,7 +39,7 @@ def parse_args():
     parser.add_argument(
         "--server_ip",
         type=str,
-        default="192.168.81.138",
+        default="0.0.0.0",
         help="IP address to bind the server to",
     )
     parser.add_argument(
