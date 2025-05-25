@@ -16,20 +16,19 @@
   </a>
   <a href="https://arxiv.org/abs/2505.14683">
     <img
-      src="https://img.shields.io/badge/RexThinker-Paper-Red%25red?logo=arxiv&logoColor=red&color=yellow
-"
+      src="https://img.shields.io/badge/RexThinker-Paper-Red%25red?logo=arxiv&logoColor=red&color=yellow"
       alt="RexThinker Paper on arXiv"
     />
   </a>
-  <a href="https://huggingface.co/ByteDance-Seed/BAGEL-7B-MoT">
+  <a href="https://huggingface.co/IDEA-Research/Rex-Thinker-GRPO-7B">
     <img 
         src="https://img.shields.io/badge/RexThinker-Weight-orange?logo=huggingface&logoColor=yellow" 
         alt="RexThinker weight on Hugging Face"
     />
   </a>
-  <a href="https://demo.bagel-ai.org/">
+  <a href="https://huggingface.co/datasets/IDEA-Research/HumanRef-CoT-45k">
     <img
-      src="https://img.shields.io/badge/RexThinker-Data-orange?logo=huggingface&logoColor=yellow" 
+      src="https://img.shields.io/badge/HumanRefCoT-Data-orange?logo=huggingface&logoColor=yellow" 
       alt="RexThinker data on Hugging Face"
     />
   </a>
@@ -70,6 +69,7 @@ This CoT-based framework enables Rex-Thinker to make faithful, interpretable pre
 
 
 # Table of Contents
+
 
 
 ## 1. Installation ⛳️
@@ -212,5 +212,15 @@ python tools/visualize_humanref_cot.py \
 ```
 
 Note that the current visualization code can't draw emoji ✅, ❌, and ⚠️, which are used in the dataset. 
+
+
+## 7. Website 🌐
+We build our cool website using Claude4-sonnet. Check the source code here [rexthinker.github.io](https://github.com/rexthinker/rexthinker.github.io). This website is under MIT license, so you can use it for your own project.
+
+## 8. Acknowledgements 🙏
+We would like to thank the following projects for their contributions to this work:
+- [Grounding DINO](https://github.com/IDEA-Research/GroundingDINO)
+- [EasyR1](https://github.com/hiyouga/EasyR1)
+
 
 ## Citation 📜

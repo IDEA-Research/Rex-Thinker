@@ -1,5 +1,6 @@
 import argparse
 import json
+import threading
 
 import gradio as gr
 import numpy as np
@@ -7,7 +8,11 @@ import torch
 from groundingdino.util.inference import load_model
 from PIL import Image
 from qwen_vl_utils import process_vision_info
-from transformers import AutoProcessor, Qwen2_5_VLForConditionalGeneration
+from transformers import (
+    AutoProcessor,
+    Qwen2_5_VLForConditionalGeneration,
+    TextIteratorStreamer,
+)
 
 from tools.inference_tools import (
     convert_boxes_from_absolute_to_qwen25_format,
@@ -34,7 +39,7 @@ def parse_args():
     parser.add_argument(
         "--server_ip",
         type=str,
-        default="0.0.0.0",
+        default="192.168.81.138",
         help="IP address to bind the server to",
     )
     parser.add_argument(
@@ -65,7 +70,7 @@ def initialize_models(args):
     return (gdino_model, processor, model)
 
 
-def process_image(
+def process_image_with_streaming(
     image,
     system_prompt,
     cate_name,
@@ -76,6 +81,9 @@ def process_image(
     rexthinker_processor,
     rexthinker_model,
 ):
+    """
+    Process image with streaming-like updates using a regular function.
+    """
     if isinstance(image, str):
         image = Image.open(image)
     elif isinstance(image, np.ndarray):
@@ -135,7 +143,25 @@ def process_image(
     input_height = inputs["image_grid_thw"][0][1] * 14
     input_width = inputs["image_grid_thw"][0][2] * 14
 
-    # Inference: Generation of the output
+    # Create placeholder visualization with GDINO results
+    placeholder_gdino_vis = image.copy()
+    try:
+        import numpy as np
+
+        from tools.inference_tools import visualize
+
+        placeholder_gdino_vis = visualize(
+            placeholder_gdino_vis,
+            gdino_boxes,
+            np.ones(len(gdino_boxes)),
+            font_size=font_size,
+            draw_width=draw_width,
+        )
+    except:
+        pass
+
+    # For now, let's use the standard generation approach
+    # We can implement true streaming later with a more complex setup
     generated_ids = rexthinker_model.generate(**inputs, max_new_tokens=4096)
     generated_ids_trimmed = [
         out_ids[len(in_ids) :]
@@ -148,6 +174,7 @@ def process_image(
     )
     output_text = output_text[0]
 
+    # Now do post-processing with the complete text
     ref_vis_result, gdino_vis_result = postprocess_and_vis_inference_out(
         image,
         output_text,
@@ -162,12 +189,184 @@ def process_image(
     return gdino_vis_result, ref_vis_result, output_text
 
 
+def process_image_non_streaming(
+    image,
+    system_prompt,
+    cate_name,
+    referring_expression,
+    draw_width,
+    font_size,
+    gdino_model,
+    rexthinker_processor,
+    rexthinker_model,
+):
+    """Non-streaming version for examples"""
+    # Use the regular processing function
+    return process_image_with_streaming(
+        image,
+        system_prompt,
+        cate_name,
+        referring_expression,
+        draw_width,
+        font_size,
+        gdino_model,
+        rexthinker_processor,
+        rexthinker_model,
+    )
+
+
+def create_streaming_interface(models):
+    """Create a streaming interface using a different approach"""
+    (
+        gdino_model,
+        rexthinker_processor,
+        rexthinker_model,
+    ) = models
+
+    def process_with_streaming(
+        image,
+        system_prompt,
+        cate_name,
+        referring_expression,
+        draw_width,
+        font_size,
+    ):
+        # Run GDINO inference
+        gdino_boxes = inference_gdino(
+            image,
+            [cate_name],
+            gdino_model,
+            TEXT_TRESHOLD=0.25,
+            BOX_TRESHOLD=0.25,
+        )
+        proposed_box = convert_boxes_from_absolute_to_qwen25_format(
+            gdino_boxes, image.width, image.height
+        )
+
+        hint = json.dumps(
+            {
+                f"{cate_name}": proposed_box,
+            }
+        )
+        question = f"Hint: Object and its coordinates in this image: {hint}\nPlease detect {referring_expression} in the image."
+
+        # compose input
+        messages = [
+            {
+                "role": "system",
+                "content": system_prompt,
+            },
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "image",
+                        "image": image,
+                    },
+                    {"type": "text", "text": question},
+                ],
+            },
+        ]
+
+        text = rexthinker_processor.apply_chat_template(
+            messages, tokenize=False, add_generation_prompt=True
+        )
+        image_inputs, video_inputs = process_vision_info(messages)
+        inputs = rexthinker_processor(
+            text=[text],
+            images=image_inputs,
+            videos=video_inputs,
+            padding=True,
+            return_tensors="pt",
+        )
+        inputs = inputs.to("cuda")
+        input_height = inputs["image_grid_thw"][0][1] * 14
+        input_width = inputs["image_grid_thw"][0][2] * 14
+
+        # Create GDINO visualization
+        gdino_vis = image.copy()
+        try:
+            import numpy as np
+
+            from tools.inference_tools import visualize
+
+            gdino_vis = visualize(
+                gdino_vis,
+                gdino_boxes,
+                np.ones(len(gdino_boxes)),
+                font_size=font_size,
+                draw_width=draw_width,
+            )
+        except:
+            pass
+
+        # Yield initial state with GDINO visualization
+        yield gdino_vis, None, "Starting generation..."
+
+        # Use streaming generation
+        streamer = TextIteratorStreamer(
+            rexthinker_processor.tokenizer,
+            timeout=60,
+            skip_prompt=True,
+            skip_special_tokens=True,
+        )
+
+        generation_kwargs = {
+            **inputs,
+            "max_new_tokens": 4096,
+            "streamer": streamer,
+            "do_sample": False,
+        }
+
+        # Start generation in a separate thread
+        thread = threading.Thread(
+            target=rexthinker_model.generate, kwargs=generation_kwargs
+        )
+        thread.start()
+
+        # Stream text with reduced frequency to minimize flickering
+        streaming_text = ""
+        token_count = 0
+        for new_text in streamer:
+            streaming_text += new_text
+            token_count += 1
+
+            # Update every 5 tokens to reduce flickering further
+            if token_count % 5 == 0:
+                yield gdino_vis, None, streaming_text
+
+        # Ensure final text is shown
+        yield gdino_vis, None, streaming_text
+
+        thread.join()
+
+        # Now do post-processing with the complete text
+        ref_vis_result, gdino_vis_result = postprocess_and_vis_inference_out(
+            image,
+            streaming_text,
+            proposed_box,
+            gdino_boxes,
+            font_size=font_size,
+            draw_width=draw_width,
+            input_height=input_height,
+            input_width=input_width,
+        )
+
+        # Final yield with complete visualizations
+        yield gdino_vis_result, ref_vis_result, streaming_text
+
+    return process_with_streaming
+
+
 def create_demo(models):
     (
         gdino_model,
         rexthinker_processor,
         rexthinker_model,
     ) = models
+
+    # Get the streaming function
+    process_with_streaming = create_streaming_interface(models)
 
     with gr.Blocks() as demo:
         gr.Markdown("# Rex-Thinker Demo")
@@ -204,7 +403,7 @@ def create_demo(models):
                         step=1,
                         label="Font size for Visualization",
                     )
-                run_button = gr.Button("Run")
+                run_button = gr.Button("Run with Streaming", variant="primary")
 
             with gr.Column():
                 gdino_output = gr.Image(label="GroundingDINO Detection")
@@ -268,7 +467,7 @@ def create_demo(models):
                 font_size,
             ],
             outputs=[gdino_output, final_output, llm_output],
-            fn=lambda img, sys, p1, p2, d, f: process_image(
+            fn=lambda img, sys, p1, p2, d, f: process_image_non_streaming(
                 img,
                 sys,
                 p1,
@@ -282,18 +481,9 @@ def create_demo(models):
             cache_examples=False,
         )
 
+        # Run with streaming text and final visualizations
         run_button.click(
-            fn=lambda img, sys, p1, p2, d, f: process_image(
-                img,
-                sys,
-                p1,
-                p2,
-                d,
-                f,
-                gdino_model,
-                rexthinker_processor,
-                rexthinker_model,
-            ),
+            fn=process_with_streaming,
             inputs=[
                 input_image,
                 system_prompt,
