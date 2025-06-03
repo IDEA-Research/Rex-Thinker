@@ -14,7 +14,7 @@
       alt="RexThinker Website"
     />
   </a>
-  <a href="https://arxiv.org/abs/2505.14683">
+  <a href="paper_temp/rexthinker.pdf">
     <img
       src="https://img.shields.io/badge/RexThinker-Paper-Red%25red?logo=arxiv&logoColor=red&color=yellow"
       alt="RexThinker Paper on arXiv"
