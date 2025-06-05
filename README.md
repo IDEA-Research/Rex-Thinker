@@ -76,6 +76,21 @@ This CoT-based framework enables Rex-Thinker to make faithful, interpretable pre
 
 # Table of Contents
 
+- [Method](#method)
+- [1. Installation ⛳️](#1-installation-️)
+  - [1.1 Download Pre-trained Model](#11-download-pre-trained-model)
+- [2. Inference 🚀](#2-inference-)
+- [3. Gradio Demo 🤗](#3-gradio-demo-)
+- [4. GRPO Post Training ⚙️](#4-grpo-post-training-️)
+  - [4.1 Prepare dataset for GRPO training](#41-prepare-dataset-for-grpo-training)
+  - [4.2 Start Training](#42-start-training)
+- [5. Evaluation on HumanRef Benchmark 🌋](#5-evaluation-on-humanref-benchmark-)
+- [6. HumanRef-CoT Dataset 📊](#6-humanref-cot-dataset-)
+  - [6.1 Visualize the dataset](#61-visualize-the-dataset)
+- [7. Website 🌐](#7-website-)
+- [8. Acknowledgements 🙏](#8-acknowledgements-)
+- [9. LICENSE](#9-license)
+- [Citation 📜](#citation-)
 
 
 ## 1. Installation ⛳️
@@ -132,7 +147,7 @@ I see 6 helmets in this image, and their order from left to right is [Helmet 5, 
 From the sorted list [Helmet 5, Helmet 1, Helmet 3, Helmet 2, Helmet 4, Helmet 6], the fourth helmet from the left is Helmet 2.
 
 # Summarize and Re-Check answer
-Let’s now recheck our answer and put ✅ for the target helmet and ❌ for others
+Let's now recheck our answer and put ✅ for the target helmet and ❌ for others
 - Helmet 5: It is the first helmet from left → ❌
 - Helmet 1: It is the second helmet from left → ❌
 - Helmet 3: It is the third helmet from left → ❌
