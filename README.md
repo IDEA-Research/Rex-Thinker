@@ -32,6 +32,12 @@
       alt="RexThinker data on Hugging Face"
     />
   </a>
+  <a href="https://huggingface.co/spaces/Mountchicken/Rex-Thinker-Demo">
+    <img
+      src="https://img.shields.io/badge/RexThinker-Demo-orange?logo=huggingface&logoColor=yellow" 
+      alt="RexThinker Demo on Hugging Face"
+    />
+  </a>
   
 </p>
 
