@@ -8,7 +8,7 @@
 <div align=center>
 
 <p align="center">
-  <a href="https://bagel-ai.org/">
+  <a href="https://rexthinker.github.io/">
     <img
       src="https://img.shields.io/badge/RexThinker-Website-Red?logo=afdian&logoColor=white&color=blue"
       alt="RexThinker Website"
