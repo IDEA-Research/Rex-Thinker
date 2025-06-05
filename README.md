@@ -14,7 +14,7 @@
       alt="RexThinker Website"
     />
   </a>
-  <a href="paper_temp/rexthinker.pdf">
+  <a href="https://arxiv.org/abs/2506.04034">
     <img
       src="https://img.shields.io/badge/RexThinker-Paper-Red%25red?logo=arxiv&logoColor=red&color=yellow"
       alt="RexThinker Paper on arXiv"
@@ -226,4 +226,16 @@ We would like to thank the following projects for their contributions to this wo
 ## 9. LICENSE
 Rex-Thinker is licensed under the [IDEA License 1.0](LICENSE), Copyright (c) IDEA. All Rights Reserved.
 
+
 ## Citation 📜
+```text
+@misc{jiang2025rexthinkergroundedobjectreferring,
+      title={Rex-Thinker: Grounded Object Referring via Chain-of-Thought Reasoning}, 
+      author={Qing Jiang and Xingyu Chen and Zhaoyang Zeng and Junzhi Yu and Lei Zhang},
+      year={2025},
+      eprint={2506.04034},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2506.04034}, 
+}
+```
