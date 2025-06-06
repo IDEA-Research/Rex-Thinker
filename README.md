@@ -181,7 +181,7 @@ With the weights of our Rex-Thinker model as a starting point—a model equipped
 
 
 ### 4.1 Prepare dataset for GRPO training
-- Step1: Download our pre-processed RefCOCOg dataset at [Hugging Face](Mountchicken/RefCOCOg-RexThinker-20k). This dataset if splited from the training set of RefCOCOg, with 20k samples.
+- Step1: Download our pre-processed RefCOCOg dataset at [Hugging Face](https://huggingface.co/datasets/Mountchicken/RefCOCOg-RexThinker-20k). This dataset if splited from the training set of RefCOCOg, with 20k samples.
 - We also provide a detailed [README](rexthinker/tools/dataset_tools/README.md) to show you how to prepare your own customized dataset for GRPO training.
 
 ### 4.2 Start Training
