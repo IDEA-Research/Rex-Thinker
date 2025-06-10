@@ -203,6 +203,11 @@ Here is the training logs of fine-tuning Rex-Thinker on RefCOCOg dataset through
 
 <p align="center"><img src="assets/training_log2.jpg" width="95%"></p>
 
+### 4.3 Convert to Hugging Face Format
+```bash
+python tools/convert_easy_r1_ckpt_to_hugginface.py \
+  --local_dir work_dirs/rexthinker/qwen25vl_7b_grpo_on_refcocog/global_step_312/actor
+```
 
 ## 5. Evaluation on HumanRef Benchmark 🌋
 We also provide the evaluation code for [HumanRef benchmark](https://github.com/IDEA-Research/RexSeek?tab=readme-ov-file#51-download). You can run the following command to evaluate the model on HumanRef dataset:
