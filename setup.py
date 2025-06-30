@@ -19,7 +19,7 @@ from setuptools import find_packages, setup
 
 
 def get_version() -> str:
-    with open(os.path.join("grpo_training/verl", "__init__.py"), encoding="utf-8") as f:
+    with open(os.path.join("rexthinker/verl", "__init__.py"), encoding="utf-8") as f:
         file_content = f.read()
         pattern = r"__version__\W*=\W*\"([^\"]+)\""
         (version,) = re.findall(pattern, file_content)
