@@ -22,3 +22,4 @@ tensorboard
 gradio==4.44.1
 pydantic==2.10.6
 tabulate
+opencv-python==4.10.0.82

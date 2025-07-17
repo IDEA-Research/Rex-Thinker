@@ -130,7 +130,7 @@ We provide a simple inference script to test the model. In this script, we use G
 CUDA_VISIBLE_DEVICES=0 python demo/inference_single_image.py \
   --image_path demo/example_images/demo_helmet.png \
   --cate_name helmet \
-  --ref_exp the forth helmet from left \
+  --ref_exp "the forth helmet from left" \
   --vis_path vis/example_output.jpg 
 ```
 
